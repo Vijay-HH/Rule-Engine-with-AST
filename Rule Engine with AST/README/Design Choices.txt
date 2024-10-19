@@ -1,0 +1,9 @@
+Design Choices
+
+AST for Rule Representation The choice of using an Abstract Syntax Tree (AST) allows for flexible rule management, including dynamic rule creation, modification, and evaluation.
+
+Dockerization - Docker was chosen for containerizing both the Flask application and the MySQL database, ensuring portability and simplifying setup across different environments.
+
+Flask Framework - Flask was selected due to its simplicity, flexibility, and rich ecosystem of extensions, which allows quick development of RESTful APIs and web applications.
+
+MySQL Database - MySQL is a reliable and widely-used relational database, providing robust storage for the rules and metadata.

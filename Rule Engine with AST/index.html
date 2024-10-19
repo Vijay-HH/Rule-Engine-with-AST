@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule Engine with AST</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            text-align: center;
+        }
+
+        h1 {
+            padding: 20px;
+            font-size: 3em;
+        }
+
+        .container {
+            width: 80%;
+            margin: 60px auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"], input[type="number"], #result-textbox {
+            width: 90%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, #result-textbox:focus {
+            outline: none;
+            border: 2px solid #2575fc;
+        }
+
+        button {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(to right, #ff4b2b, #ff416c);
+        }
+
+        .table-container {
+            margin-top: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid white;
+        }
+
+        th {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: #fff;
+            font-size: 1.2em;
+        }
+
+        td {
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        #result-textbox {
+            background-color: #e6e6e6;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Rule Engine with AST</h1>
+
+    <div class="container">
+        <form id="ruleForm">
+            <label>Age:</label><br>
+            <input type="number" name="age" id="age" placeholder="Enter Age"><br>
+            <label>Department:</label><br>
+            <input type="text" name="department" id="department" placeholder="Enter Department"><br>
+            <label>Salary:</label><br>
+            <input type="number" name="salary" id="salary" placeholder="Enter Salary"><br>
+            <label>Experience:</label><br>
+            <input type="number" name="experience" id="experience" placeholder="Enter Experience"><br><br>
+
+          <CENTER><label>Evaluation Result:</label><br>
+            <input type="text" id="result-textbox" readonly placeholder="The evaluation result will appear here..." style="display: none;"><br><br>
+
+            <button type="button" onclick="submitForm()">Evaluate</button></CENTER>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Rule Name</th>
+                    <th>Condition</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Rule 1</td>
+                    <td>(Age > 30 AND Department = 'Sales')</td>
+                </tr>
+                <tr>
+                    <td>Rule 2</td>
+                    <td>(Salary > 50000 OR Experience > 5)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function submitForm() {
+            const data = {
+                age: document.getElementById("age").value,
+                department: document.getElementById("department").value,
+                salary: document.getElementById("salary").value,
+                experience: document.getElementById("experience").value
+            };
+
+            // Send data to Flask route
+            fetch('/evaluate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({data: data}),
+            })
+            .then(response => response.json())
+            .then(result => {
+                document.getElementById("result-textbox").style.display = 'block'; // Show result textbox
+                document.getElementById("result-textbox").value = result.result ? "Eligible" : "Not Eligible";
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("result-textbox").style.display = 'block';
+                document.getElementById("result-textbox").value = "Error evaluating rule!";
+            });
+        }
+    </script>
+</body>
+</html>
